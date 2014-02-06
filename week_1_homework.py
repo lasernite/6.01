@@ -61,6 +61,34 @@ def warehouseProcess(warehouseStuff, transaction):
 
 
 
+class Warehouse():
+    
+    def __init__(self):
+        self.warehouseStuff = {}
+
+    def process(self, transaction):
+        (operation, item, amount) = transaction
+        if operation == 'receive' and item not in self.warehouseStuff.keys():
+            self.warehouseStuff[item] = amount
+        elif operation == 'receive' and item in self.warehouseStuff.keys():
+            self.warehouseStuff[item] += amount
+        elif operation == 'ship' and item in self.warehouseStuff.keys():
+            self.warehouseStuff[item] -= amount
+        else:
+            return 'Something in processing went wrong.'
+
+    def lookup(self, item):
+        if item in self.warehouseStuff.keys():
+            return self.warehouseStuff[item]
+        else:
+            return 0
+
+
+
+
+            
+        
+
 
 
 
