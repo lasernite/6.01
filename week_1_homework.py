@@ -49,6 +49,20 @@ class FruitSalad:
             return 'sorry'
 
 
+def warehouseProcess(warehouseStuff, transaction):
+    if transaction[0] == 'receive' and transaction[1] not in warehouseStuff.keys():
+        warehouseStuff[transaction[1]] = transaction[2]
+    elif transaction[0] == 'receive' and transaction[1] in warehouseStuff.keys():
+        warehouseStuff[transaction[1]] += transaction[2]
+    elif transaction[0] == 'ship' and transaction[1] in warehouseStuff.keys():
+        warehouseStuff[transaction[1]] -= transaction[2]
+    else:
+        return 'something went wrong'
+
+
+
+
+
 
 
 
