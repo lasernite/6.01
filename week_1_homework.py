@@ -83,6 +83,38 @@ class Warehouse():
         else:
             return 0
 
+''' class Delay(SM):
+    def __init__(self):
+        self.startState = 0
+    def getNextValues(self, state, inp):
+        nextState = inp
+        output = state
+        return (nextState,output) '''
+
+
+'''class DoubleDelay(SM):
+    def __init__(self):
+        self.startState = (0 , 0)
+    def getNextValues(self, state, inp):
+        nextState = (inp, state[0])
+        output = state[1]
+        return (nextState,output) '''
+
+
+''' class DelayN(SM):
+    def __init__(self, n):
+        self.startState = [0] * n
+        self.n = n
+        #your code here
+    def getNextValues(self, state, inp):
+        nextState = [inp, state[0:self.n-2]]
+        output = state[self.n-2]
+        return (nextState,output) '''
+
+lim = [1,2,3,4,5,6,7,8,9]
+
+print lim[0:9]
+    
 
 
 
