@@ -83,6 +83,21 @@ class Warehouse():
         else:
             return 0
 
+def evenSquares(numbers):
+    return [x**2 for x in numbers if x % 2 == 0]
+
+''' def sumAbsProd(a,b):
+    numbers = []
+    for anum in range(len(a)):
+        for bnum in range(len(b)):
+            numbers.append(abs(a[anum])*abs(b[bnum])) 
+    return sum([x for x in numbers]) '''
+
+def sumAbsProd(list1,list2):
+    multiplied_list = [abs(x*y) for x in list1 for y in list2]
+    return sum(multiplied_list)
+        
+
 ''' class Delay(SM):
     def __init__(self):
         self.startState = 0
@@ -111,11 +126,16 @@ class Warehouse():
         output = state[self.n-2]
         return (nextState,output) '''
 
-lim = [1,2,3,4,5,6,7,8,9]
+def lc(f, g, items):
+   return [f(x) for x in items if g(x)]
 
-print lim[0:9]
-    
 
+def oddx100(stuff):
+    def f(x):
+        return x*100
+    def g(x):
+        return x % 2 == 1
+    return lc(f,g,stuff)
 
 
             
