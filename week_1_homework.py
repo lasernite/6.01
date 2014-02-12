@@ -98,33 +98,85 @@ def sumAbsProd(list1,list2):
     return sum(multiplied_list)
         
 
-''' class Delay(SM):
+from lib601.sm import *
+
+class Delay(SM):
     def __init__(self):
         self.startState = 0
     def getNextValues(self, state, inp):
         nextState = inp
         output = state
-        return (nextState,output) '''
+        return (nextState,output)
 
 
-'''class DoubleDelay(SM):
+class DoubleDelay(SM):
     def __init__(self):
         self.startState = (0 , 0)
     def getNextValues(self, state, inp):
         nextState = (inp, state[0])
         output = state[1]
-        return (nextState,output) '''
+        return (nextState,output)
 
 
-''' class DelayN(SM):
+class DelayN(SM):
     def __init__(self, n):
         self.startState = [0] * n
-        self.n = n
-        #your code here
     def getNextValues(self, state, inp):
-        nextState = [inp, state[0:self.n-2]]
-        output = state[self.n-2]
-        return (nextState,output) '''
+        output = state[0]
+        nextState = state[1:]
+        nextState.append(inp)
+        return (nextState,output)
+
+class Fib(SM):
+    def __init__(self):
+        self.startState = [0, 1]
+    def getNextValues(self, state, inp):
+        if state == self.startState:
+            output = 0
+            nextState = [0]
+            return (nextState,output)
+        elif state == [0]:
+            output = 1
+            nextState = [1,0]
+            return (nextState,output)
+        elif state == [1,0]:
+            output = 1
+            nextState = [1,1]
+            return (nextState,output)
+        else:
+            output = state[0] + state[1]
+            nextState = [state[1]]
+            nextState.append(output)
+            return (nextState,output)
+
+''' More efficient
+
+class Fib(SM):
+    startState = (0,1)
+
+    def getNextValues(self, state, inp):
+        x, y = state
+        nextState = (y, x+y)
+        out = x
+        return (nextState, out)
+
+        '''
+
+def fib(n):
+    all_fib = []
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    for x in range(n+1):
+        if x == 0:
+            all_fib.append(0)
+        elif x == 1:
+            all_fib.append(1)
+        else:
+            all_fib.append(all_fib[x-1] + all_fib[x-2])
+    return all_fib[n]
+
 
 def lc(f, g, items):
    return [f(x) for x in items if g(x)]
@@ -167,23 +219,80 @@ class V2:
     def __str__(self):
         return 'V2' + str([self.x, self.y])
 
-def fib(n):
-    all_fib = []
-    if n == 0:
-        return 0
-    elif n == 1:
-        return 1
-    for x in range(n+1):
-        if x == 0:
-            all_fib.append(0)
-        elif x == 1:
-            all_fib.append(1)
+
+# Symbolic Algebra
+
+class Symbol:
+    def __repr__(self):
+        return self.__str__()
+    # the following methods are special in Python, and 
+    # allow us to manipulate symbols using Python's operators
+    # + and *
+    def __add__(self,other):
+        return Add(self,other)
+    def __mul__(self,other):
+        return Mul(self,other)
+
+class Var(Symbol):
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return "Var(" + repr(self.name) + ")"
+    def isConst(self):
+        return False
+    def evaluate(self, bindings):
+        return bindings[self.name]
+    def deriv(self, v):
+        if v == self.name:
+            return Num(1)
         else:
-            all_fib.append(all_fib[x-1] + all_fib[x-2])
-    return all_fib[n]
+            return Num(0)
+        
 
+class Num(Symbol):
+    isConst = True
+    def __init__(self, val):
+        self.val = val
+    def __str__(self):
+        return "Num(" + repr(self.val) + ")"
+    def isConst(self):
+        return True
+    def evaluate(self, bindings):
+        return self.val
+    def deriv(self,v):
+        return Num(0)
 
+class BinOp(Symbol):
+    def __init__(self,left,right):
+        self.left = left
+        self.right = right
+    def __str__(self):
+        return "(" + str(self.left) + " " + self.op_str + " " + str(self.right) + ")"
+    def isConst(self):
+        return self.left.isConst() and self.right.isConst()
+    def evalConst(self):
+        return self.left.val + self.right.right.val * self.right.left.val
+    def evaluate(self, bindings):
+        return self.fun(self.left.evaluate(bindings), self.right.evaluate(bindings))
+    
 
+            
+class Add(BinOp):
+    op_str = "+"
+    def fun(self, x, y):
+        return x + y
+    def deriv(self,v):
+        return self.left.deriv(v) + self.right.deriv(v)
+    
+class Mul(BinOp):
+    op_str = "*"
+    def fun(self, x, y):
+        return x * y
+    def deriv(self, v):
+        return self.left.deriv(v)*self.right + self.right.deriv(v)*self.left
+
+def balance(deposit, years):
+    return deposit*(1.05**years)
 
 
 
