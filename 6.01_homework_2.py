@@ -78,6 +78,115 @@ class RibosomeSM(SM):
         return [nextState, output]
 
 
+class Polynomial:
+    ## Intialize a polynomial with a list of coefficients.
+    ## The coefficient list starts with the highest order term.
+    def __init__(self, coeffs):
+        self.coeffs = coeffs
+        self.order = len(self.coeffs)
+
+    ## Return the coefficient of the x**i term
+    def coeff(self,i):
+        return self.coeffs[-i-1]
+
+    ## Return the value of this Polynomial evaluated at x=v
+    def val(self, v):
+        value = 0
+        for powi in range(len(self.coeffs)):
+            value += self.coeffs[-(powi+1)] * v**powi
+        return value
+
+    ## Return the roots of this Polynomial
+    def roots(self):
+        if len(self.coeffs) > 3:
+            return "Don't handle polynomials of order greater than 2"
+        elif len(self.coeffs) == 3:
+            if ((self.coeffs[1]**2)-(4*self.coeffs[0]*self.coeffs[2]))**0.5 < 0:
+                a = ((((self.coeffs[1]**2)-(4*self.coeffs[0]*self.coeffs[2]))**0.5) * -1) **0.5
+                return (complex((-self.coeffs[1])/(2*self.coeffs[0]),a/(2*self.coeffs[0])), complex((-self.coeffs[1])/(2*self.coeffs[0]),-a/(2*self.coeffs[0])))
+            else: 
+                root1 = ((-self.coeffs[1]) + ((self.coeffs[1]**2)-(4*self.coeffs[0]*self.coeffs[2]))**0.5)/(2*self.coeffs[0])
+                root2 = ((-self.coeffs[1]) - ((self.coeffs[1]**2)-(4*self.coeffs[0]*self.coeffs[2]))**0.5)/(2*self.coeffs[0])
+                if root1 == root2:
+                    return [root1]
+                else:
+                    return [root1,root2]
+            
+        elif len(self.coeffs) == 2:
+            return (-self.coeffs[1])/self.coeffs[0]
+        elif len(self.coeffs) == 1:
+            return None
+        else:
+            return None
+            
+        
+    ## Add two polynomials, return a new Polynomial
+    def add (self, other):
+        if len(self.coeffs) >= len(other.coeffs):
+            new_poly = Polynomial(list(self.coeffs))
+            for i in range(1,len(other.coeffs)+1):
+                new_poly.coeffs[-i] += other.coeffs[-i]
+            return new_poly
+        else:
+            new_poly = Polynomial(list(other.coeffs))
+            for i in range(1,len(self.coeffs)+1):
+                new_poly.coeffs[-i] += self.coeffs[-i]
+            return new_poly
+
+    
+    ## Multiply two polynomials, return a new Polynomial
+    def mul(self, other):
+        if len(self.coeffs) >= len(other.coeffs):
+            new_poly = Polynomial(list(self.coeffs))
+            for i in range(1,len(other.coeffs)+1):
+                new_poly.coeffs[-i] *= other.coeffs[-i]
+            return new_poly
+        else:
+            new_poly = Polynomial(list(other.coeffs))
+            for i in range(1,len(self.coeffs)+1):
+                new_poly.coeffs[-i] *= self.coeffs[-i]
+            return new_poly
+
+    def __add__(self, other):
+        #override the + operator so we can do things like p1+p2
+        return self.add(other)
+
+    def __mul__(self, other):
+        #override the * operator so we can do things like p1*p2
+        return self.mul(other)
+
+    def __str__(self):
+        coeffs = self.coeffs
+        return 'Polynomial(%r)' % coeffs
+
+def testpolyadd():
+    a = Polynomial([1, -7, 10, -4, 6])
+    b = Polynomial([1,1,1,1,1,1,1,1])
+    print (a+b).coeffs
+    print a.coeffs
+    print b.coeffs
+    
+
+def testpolyaddrev():
+    a = Polynomial([1,1,1,1,1,1,1,1])
+    b = Polynomial([1, -7, 10, -4, 6])
+    print (a+b).coeffs
+    print a.coeffs
+    print b.coeffs
+
+def testpolymul():
+    a = Polynomial([2,3,5,7,4])
+    b = Polynomial([6,4,2,0,2,4])
+    print (a*b).coeffs
+    print a.coeffs
+    print b.coeffs
+
+def testpolymulrev():
+    a = Polynomial([6,4,2,0,2,4])
+    b = Polynomial([2,3,5,7])
+    print (a*b).coeffs
+    print a.coeffs
+    print b.coeffs
 
 
 
