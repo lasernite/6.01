@@ -101,3 +101,9 @@ class FeedbackAdd(SM):
         (newS2, o2) = self.m2.getNextValues(s2, output)
         return ((newS1, newS2), output)
 
+
+mystery = FeedbackAdd(FeedbackAdd(R(0),Gain(1)), R(0))
+
+
+    
+
