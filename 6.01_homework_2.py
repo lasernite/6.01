@@ -149,29 +149,6 @@ class Polynomial:
             total += new
             alist = []
         return total
-    
-   
-    '''
-if len(self.coeffs) >= len(other.coeffs):
-            new_poly = Polynomial(list(self.coeffs))
-            for i in range(1,len(other.coeffs)+1):
-                new_poly.coeffs[-i] *= other.coeffs[-i]
-            return new_poly
-        else:
-            new_poly = Polynomial(list(other.coeffs))
-            # for index of the coefficents, and powers (backwards)
-            for i in range(1,len(self.coeffs)+1):
-                # multiply each item by every in list and add power as zeros
-                new_list = []
-                for n in range(1,len(self.coeffs)+1):
-                    new_list = 
-                # create expansion (multiply first by whole)
-                new_poly.coeffs[-i] *= self.coeffs[-i]
-                # add expansions together
-                total += 
-            return new_poly
-    '''
-
 
     def __add__(self, other):
         #override the + operator so we can do things like p1+p2
@@ -223,9 +200,4 @@ def testpolym():
 
 a = Polynomial([1,2,3,4])
 b = Polynomial([4,3,2,1])
-
-   
-        
-        
-            
 
