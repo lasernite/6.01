@@ -109,3 +109,13 @@ def test1():
     i1 = ISrc(-10, 'e2','e0','i4')
     ans = solveCircuit([v1,r1,r2,i1],'e0')
     return ans
+
+vSource = VSrc(vi,'v+','gnd','iVolt')
+r1 = Resistor(r, 'gnd','v+','i1')
+r2 = Resistor(r, 'v+','v-','i2')
+r3 = Resistor(r, 'v-','e1','i3')
+r4 = Resistor(r, 'v-','gnd','i4')
+r5 = Resistor(r, 'gnd','e1','i5')
+r6 = Resistor(r, 'v+', 'e1', 'i6')
+
+circuitComponents = [vSource,r1,r2,r3,r4,r5,r6]
