@@ -1,0 +1,6 @@
+#!/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
+
+import form.main
+import soar
+import soar.application
+form.main.Application(soar.application.application)

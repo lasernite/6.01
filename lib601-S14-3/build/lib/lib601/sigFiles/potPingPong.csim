@@ -1,0 +1,7 @@
+#CMax simulation
+import lib601.sig as sig
+import math
+
+potAlphaSignal = sig.ListSignal(50*[0.6]+50*[0.4]+50*[0.6]+50*[0.4])
+nSamples = 200
+deltaT = 0.02
