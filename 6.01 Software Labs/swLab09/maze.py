@@ -103,3 +103,8 @@ def mstest():
     ans = list(sorted(c))
     print ans
 
+small = Maze(hugeMazeText)
+goaltest = lambda (r,c): (r,c) == small.goal
+
+print len(search(maze_successors(small), small.start, goaltest, dfs=False))
+
