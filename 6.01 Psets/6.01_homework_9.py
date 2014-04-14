@@ -129,4 +129,43 @@ def wordLadderSuccessor(word):
             valid.append(dic_word)
     return valid
 '''
-        
+
+# Flight Itinerary
+
+def findItinerary(startCity, startTime, endCity, deadline):
+    goalTest = lambda (city,time): city == endCity and time < deadline
+    return search(flightSuccessors, (startCity,startTime), goalTest)
+
+class Flight:
+    def __init__(self, startCity, startTime, endCity, endTime):
+        self.startCity = startCity
+        self.startTime = startTime
+        self.endCity = endCity
+        self.endTime = endTime
+
+    def matches(self, (city, time)):
+        return self.startCity == city and time < self.startTime
+
+    def __str__(self):
+        return str((self.startCity, self.startTime))+' -> '+ str((self.endCity, self.endTime))
+    __repr__ = __str__
+
+def flightSuccessors(state):
+    nextstates = []
+    for flight in flightDB:
+        if flight.matches(state):
+            nextstates.append((flight.endCity,flight.endTime))
+    return nextstates
+
+def findShortestItinerary(startLoc, endLoc):
+    startd = 1
+    currentd = startd - 1
+    nex = None
+
+    while nex == None:
+        currentd += 1
+        nex = findItinerary(startLoc, startd, endLoc, currentd)
+    return nex
+
+
+
