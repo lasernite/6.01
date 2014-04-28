@@ -103,3 +103,49 @@ def bayesRule_nohelper(PA, PBgA, b):
     return DDist(final)
 
 
+# Defined
+Weather = DDist({'rain': 0.4, 'sun':0.6})
+    
+ActivityGivenWeather = lambda weather: DDist({'computer': 0.3, 'outside': 0.7}) if weather=='sun' else DDist({'computer': 0.8, 'outside': 0.2})
+
+QuantumGivenActivity = lambda activity: DDist({'keyboard': 0.8, 'bed': 0.2}) if activity=='computer' else DDist({'keyboard': 0.1, 'bed': 0.9})
+
+
+pRainGivenComputer = bayesRule(Weather, ActivityGivenWeather, 'computer').prob('rain')
+print pRainGivenComputer
+
+pWandA = makeJointDistribution(Weather, ActivityGivenWeather)
+print pWandA
+
+pA = pWandA.project(lambda (W,A): A)
+print pA
+    
+pQ = totalProbability(pA, QuantumGivenActivity)
+print pQ
+
+pC = pWandA.prob(('rain','computer')) + pWandA.prob(('sun', 'computer'))
+print pC
+
+pQandA = makeJointDistribution(pA, QuantumGivenActivity)
+print pQandA
+
+pQgWandA = lambda (W,A): DDist({'keyboard': QuantumGivenActivity(A).prob('keyboard'), 'bed':QuantumGivenActivity(A).prob('bed') })
+
+pWandAandQ = makeJointDistribution(pWandA, pQgWandA)
+pWnAnQ = {(tuplekey[0][0],tuplekey[0][1],tuplekey[1]): pWandAandQ.prob(tuplekey) for tuplekey in pWandAandQ.support()}
+print pWnAnQ
+
+WeatherAndActivityAndQuantum = DDist(pWnAnQ)
+
+pSunAndOutside = WeatherAndActivityAndQuantum.project(lambda (W,A,Q): W == 'sun' and A == 'outside').prob(True)
+print pSunAndOutside
+# easier is pWandA.prob(('sun','outside'))
+
+pComputer = pC
+print pComputer
+
+pRainGivenKeyboard = WeatherAndActivityAndQuantum.condition(lambda (W,A,Q): Q == 'keyboard').project(lambda (W,A,Q): W == 'rain').prob(True)
+print pRainGivenKeyboard
+
+pRainGivenBed = WeatherAndActivityAndQuantum.condition(lambda (W,A,Q): Q == 'bed').project(lambda (W,A,Q): W == 'rain').prob(True)
+print pRainGivenBed
