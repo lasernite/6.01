@@ -24,6 +24,8 @@ b = 1
 def perfectObsModel(state):
     return dist.deltaDist(ideal[state])
 
+ideal = [1,8,8,1,1]
+
 def obsModelA(state):
     return dist.mixture(dist.deltaDist(ideal[state]),dist.deltaDist(0),0.7)
 
@@ -46,7 +48,8 @@ def teleportModel(state):
     return dist.mixture(dist.uniformDist(range(numStates)), nominal,0.3)
 
 def resetModel(state):
-    pass #your code here
+    nominal = moveRightModel(state)
+    return dist.mixture(dist.deltaDist(0), nominal, 0.3)
 
 def teleportModel2(state):
     nominal = dist.deltaDist(state)
